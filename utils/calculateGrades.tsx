@@ -1,6 +1,9 @@
 // There's a lot of problems when dealing with round involving floating point numbers in JavaScript
 // https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
 // https://stackoverflow.com/questions/1458633/how-to-deal-with-floating-point-number-precision-in-javascript
+
+import { round } from "mathjs";
+
 // So, we decide to use the Intl.NumberFormat to format the numbers
 function formatNumber(number: number) {
   const formatter = new Intl.NumberFormat('en-US', {
@@ -40,14 +43,13 @@ export const calculateThirdGrade = (
   grade4: string | undefined,
 ) => {
   return (
-    Math.floor(
+    round(
       ((7 -
         (Number(grade1.replace(',', '.')) * weightAv1 +
-          Number(grade2.replace(',', '.')) * weightAv2+
+          Number(grade2.replace(',', '.')) * weightAv2 +
           Number(grade4 ? grade4.replace(',', '.') : 0.0) * weightAv4)) /
-        0.3) *
-        10,
-    ) / 10
+        0.3),
+    )
   );
 };
 
@@ -61,19 +63,18 @@ export const calculateAV4Grade = (
       (Number(grade1.replace(',', '.')) * weightAv1 +
         Number(grade2.replace(',', '.')) * weightAv2 +
         Number(grade3 ? grade3.replace(',', '.') : 0.0) * weightAv3)) /
-      0.2,
+    0.2,
     1,
   );
 };
 
 export const gradeText = (grade: number) => {
-  return `${
-    grade < 1
-      ? `${grade} décimos `
-      : grade === 1
+  return `${grade < 1
+    ? `${grade} décimos `
+    : grade === 1
       ? '1 ponto '
       : `${grade} pontos `
-  }`;
+    }`;
 };
 
 export const thirdGradeText = (thirdGrade: number) => {
@@ -86,9 +87,8 @@ export const finalGradeText = (finalGrade?: number) => {
   if (finalGrade) {
     return finalGrade > 10
       ? 'Você foi reprovado'
-      : `Você precisa de ${String(finalGrade).replace('.', ',')} ponto${
-          finalGrade > 1 && 's'
-        } na Avaliação Final`;
+      : `Você precisa de ${String(finalGrade).replace('.', ',')} ponto${finalGrade > 1 && 's'
+      } na Avaliação Final`;
   }
 };
 
@@ -100,9 +100,9 @@ export const arithmeticAverage = (
 ) => {
   return round(
     Number(grade1.replace(',', '.')) * 0.25 +
-      Number(grade2.replace(',', '.')) * 0.25 +
-      Number(grade3 ? grade3.replace(',', '.') : 0) * 0.3 +
-      Number(grade4 ? grade4.replace(',', '.') : 0) * 0.2,
+    Number(grade2.replace(',', '.')) * 0.25 +
+    Number(grade3 ? grade3.replace(',', '.') : 0) * 0.3 +
+    Number(grade4 ? grade4.replace(',', '.') : 0) * 0.2,
     1,
   );
 };
