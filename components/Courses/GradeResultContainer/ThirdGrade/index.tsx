@@ -1,26 +1,26 @@
-import {View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import LottieView from 'lottie-react-native';
 import {
   calculateThirdGrade,
   gradeText,
 } from '../../../../utils/calculateGrades';
-import {Course} from '../../../../models/course';
+import { Course } from '../../../../models/course';
 import useTheme from '../../../../hooks/useTheme';
 
-export default function ThirdGrade({grade1, grade2, grade4}: Course) {
-  const {colors} = useTheme();
+export default function ThirdGrade({ grade1, grade2, grade4 }: Course) {
+  const { colors } = useTheme();
   const color = colors.primary;
   const thirdGrade = calculateThirdGrade(grade1, grade2, grade4!);
   return (
     <View style={styles.container}>
       <View>
-        <Text style={[styles.text, {color}]}>
+        <Text style={[styles.text, { color }]}>
           {thirdGrade > 10
             ? 'Mesmo que sua nota na AV3 seja 10, você já está na Avaliação Final'
-            : `Você precisa de ${String(thirdGrade).replace(
-                '.',
-                ',',
-              )} ${gradeText(thirdGrade)} na AV3`}
+            : `Você precisa de ${gradeText(thirdGrade).replace(
+              '.',
+              ',',
+            )} na AV3`}
         </Text>
       </View>
       <LottieView
