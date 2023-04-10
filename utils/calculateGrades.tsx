@@ -83,7 +83,7 @@ export const gradeText = (grade: number) => {
 
 export const averageText = (average: number) => {
   const initText = "Sua média foi de ";
-  const averageString = String(average, 1).replace(".", ",");
+  const averageString = String(average).replace(".", ",");
   if (average === 0.1) {
     return `${initText + averageString} décimo`;
   } else if (average < 1) {
