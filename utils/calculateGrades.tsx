@@ -1,108 +1,96 @@
 // There's a lot of problems when dealing with round involving floating point numbers in JavaScript
 // https://stackoverflow.com/questions/11832914/how-to-round-to-at-most-2-decimal-places-if-necessary
 // https://stackoverflow.com/questions/1458633/how-to-deal-with-floating-point-number-precision-in-javascript
-// So, we decide to use the Intl.NumberFormat to format the numbers
-function formatNumber(number: number) {
-  const formatter = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
 
-  return formatter.format(number);
+import { Grades } from "../interfaces/Grade";
+
+export const weightGrade1 = 0.25;
+export const weightGrade2 = 0.25;
+export const weightGrade3 = 0.3;
+export const weightGrade4 = 0.2;
+
+function formattedNumber(number: number, decimalCases: number) {
+  // So, we multiply the number by 10 to the power of the number of decimal cases
+  // and then we round it, and then we divide it by the same factor,
+  // the we get the number with the desired number of decimal cases.
+  // Ex: 1.2345 with 2 decimal cases
+  const factor = Math.pow(10, decimalCases);
+  const aproxNum = number * factor;
+  const roundedNum = Math.round(aproxNum);
+  const result = roundedNum / factor;
+
+  return result;
 }
 
-const weightAv1 = 0.25;
-const weightAv2 = 0.25;
-const weightAv3 = 0.3;
-const weightAv4 = 0.2;
+export const parseDecimal = (value: string) => {
+  return Number(value.replace(",", "."));
+};
 
 export const formatGrade = (value: string) => {
   if (value.length >= 3) {
-    value = value.replace(/\D/g, '').replace(/(\d{2})(\d{1}).*/, '$1,$2');
-    if (Number(value.toString().replace(',', '.')) > 10) {
+    value = value.replace(/\D/g, "").replace(/(\d{2})(\d{1}).*/, "$1,$2");
+    if (Number(value.toString().replace(",", ".")) > 10) {
       value = value.slice(0, -2);
-      value = value.replace(/\D/g, '').replace(/(\d{1})(\d{1,2}).*/, '$1,$2');
+      value = value.replace(/\D/g, "").replace(/(\d{1})(\d{1,2}).*/, "$1,$2");
     }
   } else {
-    value = value.replace(/\D/g, '').replace(/(\d{1})(\d{1,2}).*/, '$1,$2');
+    value = value.replace(/\D/g, "").replace(/(\d{1})(\d{1,2}).*/, "$1,$2");
   }
 
   return value;
 };
 
+export const averageGrades = (grades: Grades): number => {
+  let sumGrades =
+    parseDecimal(grades.grade1) * weightGrade1 +
+    parseDecimal(grades.grade2) * weightGrade2;
+  if (grades.grade3) {
+    sumGrades += parseDecimal(grades.grade3) * weightGrade3;
+  }
+  if (grades.grade4) {
+    sumGrades += parseDecimal(grades.grade4) * weightGrade4;
+  }
+
+  return formattedNumber(sumGrades, 1);
+};
+
 export const calculateFinalGrade = (average: number) => {
-  return round((5 - average * 0.6) / 0.4, 1);
+  return formattedNumber((5 - average * 0.6) / 0.4, 1);
 };
 
-export const calculateThirdGrade = (
-  grade1: string,
-  grade2: string,
-  grade4: string | undefined,
-) => {
-  return (
-    Math.floor(
-      ((7 -
-        (Number(grade1.replace(',', '.')) * weightAv1 +
-          Number(grade2.replace(',', '.')) * weightAv2+
-          Number(grade4 ? grade4.replace(',', '.') : 0.0) * weightAv4)) /
-        0.3) *
-        10,
-    ) / 10
-  );
+export const calculateThirdGrade = ({ grade1, grade2, grade4 }: Grades) => {
+  const avg = averageGrades({ grade1, grade2, grade4 });
+  return formattedNumber((7 - avg) / 0.3, 1);
 };
 
-export const calculateAV4Grade = (
-  grade1: string,
-  grade2: string,
-  grade3: string | undefined,
-) => {
-  return round(
-    (7 -
-      (Number(grade1.replace(',', '.')) * weightAv1 +
-        Number(grade2.replace(',', '.')) * weightAv2 +
-        Number(grade3 ? grade3.replace(',', '.') : 0.0) * weightAv3)) /
-      0.2,
-    1,
-  );
+export const calculateAV4Grade = ({ grade1, grade2, grade3 }: Grades) => {
+  const avg = averageGrades({ grade1, grade2, grade3 });
+  return formattedNumber((7 - avg) / 0.2, 1);
 };
 
 export const gradeText = (grade: number) => {
-  return `${
-    grade < 1
-      ? `${grade} décimos `
-      : grade === 1
-      ? '1 ponto '
-      : `${grade} pontos `
-  }`;
+  const gradeString = String(grade).replace(".", ",");
+  if (grade === 0.1) {
+    return `${gradeString} décimo`;
+  } else if (grade < 1) {
+    return `${gradeString} décimos`;
+  } else if (grade === 1) {
+    return "1 ponto";
+  } else if (grade > 1) {
+    return `${gradeString} pontos`;
+  } else return "";
 };
 
-export const thirdGradeText = (thirdGrade: number) => {
-  return thirdGrade > 10
-    ? 'Mesmo que sua nota na AV3 seja 10, você já está na Avaliação Final'
-    : `Você precisa de ${thirdGrade} ponto${thirdGrade > 1 && 's'} na AV3`;
-};
-
-export const finalGradeText = (finalGrade?: number) => {
-  if (finalGrade) {
-    return finalGrade > 10
-      ? 'Você foi reprovado'
-      : `Você precisa de ${String(finalGrade).replace('.', ',')} ponto${
-          finalGrade > 1 && 's'
-        } na Avaliação Final`;
-  }
-};
-
-export const arithmeticAverage = (
-  grade1: string,
-  grade2: string,
-  grade3: string | undefined,
-  grade4: string | undefined,
-) => {
-  return round(
-    Number(grade1.replace(',', '.')) * 0.25 +
-      Number(grade2.replace(',', '.')) * 0.25 +
-      Number(grade3 ? grade3.replace(',', '.') : 0) * 0.3 +
-      Number(grade4 ? grade4.replace(',', '.') : 0) * 0.2,
-    1,
-  );
+export const averageText = (average: number) => {
+  const initText = "Sua média foi de ";
+  const averageString = String(average, 1).replace(".", ",");
+  if (average === 0.1) {
+    return `${initText + averageString} décimo`;
+  } else if (average < 1) {
+    return `${initText + averageString} décimos`;
+  } else if (average === 1) {
+    return initText + "1 ponto";
+  } else if (average > 1) {
+    return `${initText + averageString} pontos`;
+  } else return "";
 };

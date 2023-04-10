@@ -1,26 +1,45 @@
 import {View, Text, StyleSheet} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {
+  averageGrades,
+  averageText,
   calculateThirdGrade,
   gradeText,
 } from '../../../../utils/calculateGrades';
-import {Course} from '../../../../models/course';
 import useTheme from '../../../../hooks/useTheme';
+import { Grades } from '../../../../interfaces/Grade';
 
-export default function ThirdGrade({grade1, grade2, grade4}: Course) {
+export default function ThirdGrade({grade1, grade2, grade4}: Grades) {
+  const grades = {
+    grade1,
+    grade2,
+    grade4,
+  }
   const {colors} = useTheme();
   const color = colors.primary;
-  const thirdGrade = calculateThirdGrade(grade1, grade2, grade4!);
+  const avg = averageGrades(grades)
+  const thirdGrade = calculateThirdGrade({...grades, grade3: '10'});
+
+  const resultText = () => {
+    if (avg >= 7) {
+      return 'Parabéns, você foi aprovado na disciplina!';
+    } else if(avg < 7 && thirdGrade <= 10 ) {
+      return `Você precisa de ${gradeText(thirdGrade)} na AV3`;
+    } else if(avg < 7 && thirdGrade > 10 ) {
+      return 'Mesmo que sua nota na AV3 seja 10, você pode estar na Avaliação Final ou Reprovado.';
+    } else {
+      return 'Infelizmente você já está reprovado na disciplina.';
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View>
         <Text style={[styles.text, {color}]}>
-          {thirdGrade > 10
-            ? 'Mesmo que sua nota na AV3 seja 10, você já está na Avaliação Final'
-            : `Você precisa de ${String(thirdGrade).replace(
-                '.',
-                ',',
-              )} ${gradeText(thirdGrade)} na AV3`}
+          {averageText(avg)}
+        </Text>
+        <Text style={[styles.text, {color}]}>
+          {resultText()}
         </Text>
       </View>
       <LottieView

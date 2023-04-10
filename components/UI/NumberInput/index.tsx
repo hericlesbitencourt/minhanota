@@ -19,10 +19,8 @@ function Input(
   {
     placeholder,
     value,
-    keyboardType,
     onChangeText,
     onSubmitEditing,
-    textAlign,
     returnKeyType,
     style,
     containerStyle,
@@ -32,26 +30,22 @@ function Input(
   const {colors} = useTheme();
 
   function handleOnChangeText(text: string) {
-    if (keyboardType === 'numeric') {
-      let formattedValue = formatGrade(text);
-      let floatValue = Number(formattedValue.replace(',', '.'));
-      if (floatValue === 10) {
-        return onChangeText('10');
-      }
-      if (floatValue > 10) {
-        return;
-      } else {
-        return onChangeText(formattedValue);
-      }
+    let formattedValue = formatGrade(text);
+    let floatValue = parseFloat(formattedValue.replace(',', '.'));
+    if (floatValue === 10) {
+      return onChangeText('10');
+    }
+    if (floatValue > 10) {
+      return onChangeText('10');
     } else {
-      return onChangeText(text);
+      return onChangeText(formattedValue);
     }
   }
 
   return (
     <View style={[containerStyle]}>
       <TextInput
-        keyboardType={keyboardType}
+          keyboardType="numeric"
         style={[
           styles.input,
           {
@@ -61,15 +55,15 @@ function Input(
           },
           style,
         ]}
+        maxLength={value === '10' ? 2 : value === '1,0' ? 4 : 3}
         onChangeText={handleOnChangeText}
         value={value}
         placeholder={placeholder}
         placeholderTextColor={colors.tertiary}
-        maxLength={20}
         onSubmitEditing={onSubmitEditing}
         returnKeyType={returnKeyType}
         ref={ref}
-        textAlign={textAlign}
+        textAlign="center"
       />
     </View>
   );

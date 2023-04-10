@@ -1,31 +1,53 @@
-import {View, Text, StyleSheet} from 'react-native';
-import LottieView from 'lottie-react-native';
-import {calculateAV4Grade} from '../../../../utils/calculateGrades';
-import {Course} from '../../../../models/course';
-import useTheme from '../../../../hooks/useTheme';
+import { View, Text, StyleSheet } from "react-native";
+import LottieView from "lottie-react-native";
+import {
+  averageGrades,
+  averageText,
+  calculateAV4Grade,
+  gradeText,
+} from "../../../../utils/calculateGrades";
+import useTheme from "../../../../hooks/useTheme";
+import { Grades } from "../../../../interfaces/Grade";
 
-export default function AV4Grade({grade1, grade2, grade3}: Course) {
-  const {colors} = useTheme();
+export default function AV4Grade({ grade1, grade2, grade3 }: Grades) {
+  const grades = {
+    grade1,
+    grade2,
+    grade3,
+  };
+  const { colors } = useTheme();
   const color = colors.primary;
-  const AV4Grade = calculateAV4Grade(grade1, grade2, grade3);
+  const avg = averageGrades(grades)
+  const av4Grade = calculateAV4Grade({...grades, grade4: '10'});
 
+
+  const resultText = () => {
+    if (avg >= 7) {
+      return 'Parabéns, você foi aprovado na disciplina!';
+    } else if(avg < 7 && av4Grade <= 10 ) {
+      return `Você precisa de ${gradeText(av4Grade)} na AV4`;
+    } else if(avg < 7 && av4Grade > 10 ) {
+      return 'Mesmo que sua nota na AV4 seja 10, você pode estar na Avaliação Final ou Reprovado.';
+    } else {
+      return 'Infelizmente você já está reprovado na disciplina.';
+    }
+  }
   return (
     <View style={styles.container}>
       <View>
         <Text style={[styles.text, {color}]}>
-          {AV4Grade > 10
-            ? 'Mesmo que sua nota no AV4 seja 10, você já está na Avaliação Final'
-            : `Você precisa de ${String(AV4Grade).replace('.', ',')} ponto${
-                AV4Grade > 1 && 's'
-              } no AV4`}
+          {averageText(avg)}
+        </Text>
+        <Text style={[styles.text, { color }]}>
+          {resultText()}
         </Text>
       </View>
       <LottieView
         style={[styles.lottieView]}
         source={
-          AV4Grade > 10
-            ? require('../../../../assets/lottie/online-study.json')
-            : require('../../../../assets/lottie/third-grade.json')
+          av4Grade > 10
+            ? require("../../../../assets/lottie/online-study.json")
+            : require("../../../../assets/lottie/third-grade.json")
         }
         autoPlay
       />
@@ -35,14 +57,14 @@ export default function AV4Grade({grade1, grade2, grade3}: Course) {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 32,
   },
   text: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   lottieView: {
     width: 250,

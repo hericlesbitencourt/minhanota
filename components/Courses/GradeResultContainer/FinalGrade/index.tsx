@@ -1,40 +1,47 @@
 import {View, Text, StyleSheet} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {
-  arithmeticAverage,
-  calculateFinalGrade,
+  averageGrades, averageText, calculateFinalGrade, gradeText,
 } from '../../../../utils/calculateGrades';
-import {Course} from '../../../../models/course';
 import useTheme from '../../../../hooks/useTheme';
+import { Grades } from '../../../../interfaces/Grade';
 
 export default function FinalGrade({
   grade1,
   grade2,
   grade3,
   grade4,
-}: Course) {
+}: Grades) {
+  const grades = {
+    grade1,
+    grade2,
+    grade3,
+    grade4,
+  };
   const {colors} = useTheme();
   const color = colors.primary;
-  const average = arithmeticAverage(grade1, grade2, grade3!, grade4!);
-  const finalGrade = calculateFinalGrade(average);
-  console.log('average', average);
-  console.log('finalGrade', (5 - average * 0.6) / 0.4);
+
+  const avg = averageGrades(grades)
+  const finalGrade = calculateFinalGrade(avg);
+
+  const resultText = () => {
+    if (avg >= 7) {
+      return 'Parabéns, você foi aprovado na disciplina!';
+    } else if(avg < 7 && finalGrade <= 10 ) {
+      return `Você precisa de ${gradeText(finalGrade)} na Avaliação Final`;
+    } else {
+      return 'Infelizmente você já está reprovado na disciplina.';
+    }
+  }
+  
   return (
     <View style={styles.container}>
+      <Text style={[styles.text, {color}]}>
+        {averageText(avg)}
+      </Text>
       <View>
         <Text style={[styles.text, {color}]}>
-          {`Sua MÉDIA foi de ${String(average).replace('.', ',')} ponto${
-            average && average > 1 && 's'
-          }`}
-        </Text>
-        <Text style={[styles.text, {color}]}>
-          {average >= 7
-            ? 'Parabéns você foi aprovado!'
-            : average < 7 && average >= 1.7
-            ? `Você precisa de ${String(finalGrade).replace('.', ',')} ponto${
-                finalGrade && finalGrade > 1 ? 's' : ''
-              } na Avaliação Final`
-            : 'Você foi reprovado'}
+          {resultText()}
         </Text>
       </View>
       <LottieView

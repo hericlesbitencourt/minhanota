@@ -1,6 +1,6 @@
 import { StyleSheet, TextInput, View } from "react-native";
-import React, { useState } from "react";
-import Input from "../../UI/Input";
+import React, { createRef, useState } from "react";
+import NumberInput from "../../UI/NumberInput";
 import GradeResultContainer from "../GradeResultContainer";
 
 export default function CourseForm() {
@@ -9,17 +9,15 @@ export default function CourseForm() {
   const [grade3, setGrade3] = useState("");
   const [grade4, setGrade4] = useState("");
 
-  const gradeInput1Ref = React.createRef<TextInput>();
-  const gradeInput2Ref = React.createRef<TextInput>();
-  const gradeInput3Ref = React.createRef<TextInput>();
-  const gradeInput4Ref = React.createRef<TextInput>();
-
+  const gradeInput1Ref = createRef<TextInput>();
+  const gradeInput2Ref = createRef<TextInput>();
+  const gradeInput3Ref = createRef<TextInput>();
+  const gradeInput4Ref = createRef<TextInput>();
+  
   return (
     <View style={styles.container}>
       <View style={styles.gradeInputContainer}>
-        <Input
-          keyboardType="numeric"
-          textAlign="center"
+        <NumberInput
           placeholder="AV1"
           value={grade1}
           onChangeText={setGrade1}
@@ -28,9 +26,7 @@ export default function CourseForm() {
           returnKeyType="next"
           containerStyle={[styles.viewWidth23]}
         />
-        <Input
-          keyboardType="numeric"
-          textAlign="center"
+        <NumberInput
           placeholder="AV2"
           value={grade2}
           onChangeText={setGrade2}
@@ -39,9 +35,7 @@ export default function CourseForm() {
           returnKeyType="next"
           containerStyle={[styles.viewWidth23]}
         />
-        <Input
-          keyboardType="numeric"
-          textAlign="center"
+        <NumberInput
           placeholder="AV3"
           value={grade3}
           onChangeText={setGrade3}
@@ -50,9 +44,7 @@ export default function CourseForm() {
           returnKeyType="next"
           containerStyle={[styles.viewWidth23]}
         />
-        <Input
-          keyboardType="numeric"
-          textAlign="center"
+        <NumberInput
           placeholder="AV4"
           value={grade4}
           onChangeText={setGrade4}
@@ -60,12 +52,7 @@ export default function CourseForm() {
           containerStyle={[styles.viewWidth23]}
         />
       </View>
-      <GradeResultContainer
-        grade1={grade1}
-        grade2={grade2}
-        grade3={grade3}
-        grade4={grade4}
-      />
+      <GradeResultContainer grade1={grade1} grade2={grade2} grade3={grade3} grade4={grade4} />
     </View>
   );
 }
