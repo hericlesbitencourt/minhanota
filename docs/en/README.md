@@ -2,7 +2,7 @@
   <img src="../../assets/images/Logo/Logo.png" alt="Minha Nota Logo" width="200" height="200" style="border-radius: 10px;"/>
 </p>
 
-Select language: [English](./README.md) :us:, [Português | Brasil](/README.md) :brazil:
+Select language: [English](./README.md) :us:, [Português | Brasil](https://github.com/hericlesbitencourt/minhanota) :brazil:
 
 # Minha Nota
 
@@ -48,10 +48,14 @@ Install dependencies
   yarn install
 ```
 
-Run the project
+Install the Expo app in PlayStore and run the project
 
 ```bash
-  npm run android
+  npm start
+
+  or
+
+  yarn start
 ```
 
 
@@ -71,6 +75,6 @@ We appreciate if you share and promote the application with your friends and pos
 ## Developers
 
 - [@hericlesbitencourt](https://www.github.com/hericlesbitencourt) - [Linkedin](https://www.linkedin.com/in/hericlesbitencourt/)
-- [@pedrogs97](https://www.github.com/pedrogs97) - [Linkedin](https://www.linkedin.com/in/pedro-gustavo-le%C3%A3o-de-santana-1868b8150/)
+- [@pedrogs97](https://www.github.com/pedrogs97) - [Linkedin](https://www.linkedin.com/in/pedro-gustavo-santana/)
 
 
