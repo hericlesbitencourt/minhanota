@@ -3,7 +3,6 @@ import useTheme from '../../../hooks/useTheme';
 
 export default function Title({children}: {children: any}) {
   const {colors} = useTheme();
-  console.log('colors', colors.primary)
   return (
     <Text style={[styles.title, {color: colors.primary}]}>{children}</Text>
   );
