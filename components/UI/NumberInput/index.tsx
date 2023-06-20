@@ -51,7 +51,7 @@ function Input(
           {
             shadowColor: colors.primary,
             color: colors.primary,
-            backgroundColor: colors.card,
+            backgroundColor: colors.background,
           },
           style,
         ]}
